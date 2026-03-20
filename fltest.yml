@@ -1,32 +1,22 @@
-name: Build Simple .NET Website
+trigger:
+- main
 
-on:
-  push:
-    branches:
-      - main
+pool:
+  vmImage: 'windows-latest'
 
-jobs:
-  build:
-    runs-on: windows-latest
+steps:
+- checkout: self
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+- script: mkdir fldatesting.com
+  displayName: 'Create Website Folder'
 
-      - name: Create Website Folder
-        run: |
-          mkdir fldatesting.com
-          
-      - name: Create index.html
-        run: |
-          echo ^<html^>^<body^>^<h1^>testing website^</h1^>^</body^>^</html^> > fldatesting.com\index.html
+- script: echo ^<html^>^<body^>^<h1^>testing website^</h1^>^</body^>^</html^> > fldatesting.com\index.html
+  displayName: 'Create index.html'
 
-      - name: Show File Content
-        run: |
-          type fldatesting.com\index.html
+- script: type fldatesting.com\index.html
+  displayName: 'Show File Content'
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: fldatesting-site
-          path: fldatesting.com
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'fldatesting.com'
+    ArtifactName: 'fldatesting-site'
