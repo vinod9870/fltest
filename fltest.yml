@@ -1,0 +1,32 @@
+name: Build Simple .NET Website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Create Website Folder
+        run: |
+          mkdir fldatesting.com
+          
+      - name: Create index.html
+        run: |
+          echo ^<html^>^<body^>^<h1^>testing website^</h1^>^</body^>^</html^> > fldatesting.com\index.html
+
+      - name: Show File Content
+        run: |
+          type fldatesting.com\index.html
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: fldatesting-site
+          path: fldatesting.com
